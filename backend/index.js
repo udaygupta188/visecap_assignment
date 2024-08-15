@@ -5,8 +5,9 @@ require('dotenv').config();
 const connectDB = require("./config/db");
 const routes = require('./routes/index');
 
-// Express Server Setup
+//Express Server Setup
 const app = express();
+const port = process.env.PORT || 5111;
 const corsOptions = {
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
@@ -14,7 +15,7 @@ const corsOptions = {
     credentials: true
 };
 
-// Express Middlewares
+//Express Middlewares
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
@@ -23,17 +24,19 @@ app.use(cors(corsOptions));
 const DB = process.env.MONGO_URI;
 connectDB(DB);
 
-// Server status endpoint
+//Server status endpoint
 app.get('/', (req, res) => {
     res.send('Server is Up!');
 });
 
 app.get('/test', (req, res) => {
-    res.json({ message: 'Test File' });
+    res.json({message:'Test File'});
 });
 
 // Routes
 app.use("/api", routes);
 
-// Export the app for Vercel to use as a serverless function
+app.listen(port, () => {
+    console.log(`Node/Express Server is Up......\nPort: localhost:${port}`);
+});
 module.exports = app;
