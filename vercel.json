@@ -1,0 +1,10 @@
+{
+  "builds": [
+    { "src": "backend/**/*.js", "use": "@vercel/node" },
+    { "src": "frontend/bike-assembly-app/package.json", "use": "@vercel/static-build" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/backend/$1" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}
