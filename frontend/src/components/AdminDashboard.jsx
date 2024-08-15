@@ -5,11 +5,9 @@ import "react-datepicker/dist/react-datepicker.css";
 import MyChart from "./MyChart";
 import { getAccessToken } from "../utils";
 
-
 const AdminDashboard = () => {
   const [fromDate, setFromDate] = useState(null);
   const [toDate, setToDate] = useState(null);
-
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -34,7 +32,10 @@ const AdminDashboard = () => {
     ],
   });
 
+  const [loading, setLoading] = useState(false);
+
   const fetchData = async () => {
+    setLoading(true);
     try {
       const token = getAccessToken();
       const baseUrl = process.env.REACT_APP_BASE_URL;
@@ -46,9 +47,9 @@ const AdminDashboard = () => {
       const bikes = response.data.bikes;
 
       // Process data for bikes assembled chart
-      const bikeTypes = [...new Set(bikes.map(bike => bike.bikeType))];
-      const bikeCounts = bikeTypes.map(type =>
-        bikes.filter(bike => bike.bikeType === type).length
+      const bikeTypes = [...new Set(bikes.map((bike) => bike.bikeType))];
+      const bikeCounts = bikeTypes.map((type) =>
+        bikes.filter((bike) => bike.bikeType === type).length
       );
 
       setChartData({
@@ -64,9 +65,9 @@ const AdminDashboard = () => {
       });
 
       // Process data for employee production chart (if available)
-      const employees = [...new Set(bikes.map(bike => bike.assembledBy))];
-      const employeeCounts = employees.map(emp =>
-        bikes.filter(bike => bike.assembledBy === emp).length
+      const employees = [...new Set(bikes.map((bike) => bike.assembledBy))];
+      const employeeCounts = employees.map((emp) =>
+        bikes.filter((bike) => bike.assembledBy === emp).length
       );
 
       setEmployeeData({
@@ -80,9 +81,10 @@ const AdminDashboard = () => {
           },
         ],
       });
-
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,16 +121,22 @@ const AdminDashboard = () => {
           </button>
         </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold text-gray-700 mb-4">Bikes Assembled</h3>
-          <MyChart chartData={chartData} />
+      {loading ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
         </div>
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-xl font-bold text-gray-700 mb-4">Employee Production</h3>
-          <MyChart chartData={employeeData} />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-700 mb-4">Bikes Assembled</h3>
+            <MyChart chartData={chartData} />
+          </div>
+          <div className="bg-white rounded-lg shadow-lg p-6">
+            <h3 className="text-xl font-bold text-gray-700 mb-4">Employee Production</h3>
+            <MyChart chartData={employeeData} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
