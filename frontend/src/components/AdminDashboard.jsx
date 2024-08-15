@@ -7,8 +7,8 @@ import { getAccessToken } from "../utils";
 
 
 const AdminDashboard = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [fromDate, setFromDate] = useState(null);
+  const [toDate, setToDate] = useState(null);
 
   const [chartData, setChartData] = useState({
     labels: [],
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
       const token = getAccessToken();
       const baseUrl = process.env.REACT_APP_BASE_URL;
       const response = await axios.get(`${baseUrl}/bikes-assembled`, {
-        params: { startDate, endDate },
+        params: { fromDate, toDate },
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -100,14 +100,14 @@ const AdminDashboard = () => {
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Admin Dashboard</h2>
         <div className="flex items-center space-x-4">
           <DatePicker
-            selected={startDate}
-            onChange={(date) => setStartDate(date)}
+            selected={fromDate}
+            onChange={(date) => setFromDate(date)}
             placeholderText="Start Date"
             className="border border-gray-300 rounded-md p-2"
           />
           <DatePicker
-            selected={endDate}
-            onChange={(date) => setEndDate(date)}
+            selected={toDate}
+            onChange={(date) => setToDate(date)}
             placeholderText="End Date"
             className="border border-gray-300 rounded-md p-2"
           />
