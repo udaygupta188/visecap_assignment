@@ -7,7 +7,7 @@ const connectDB = require("./config/db");
 const routes = require('./routes/index');
 const errorHandlerMiddleware = require('./middleware/errorHandlerMiddleware');
 
-//Express Server Setup
+//Express Server Setup by uday
 const app = express();
 const port = process.env.PORT || 5000;
 const corsOptions = {
