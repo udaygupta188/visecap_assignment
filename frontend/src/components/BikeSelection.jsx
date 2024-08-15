@@ -1,7 +1,8 @@
 import React from 'react';
 import axios from 'axios';
 import { getAccessToken } from '../utils';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const BikeSelection = () => {
   const handleBikeSelection = async (bikeType) => {
@@ -12,12 +13,18 @@ const BikeSelection = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       
-      // Show success message
-      alert(`Bike assembly started: ${response.data.message}`);
+      // Show success toaster
+      toast.success(`Bike assembly started: ${response.data.message}`, {
+        position: 'top-right',  // Correct usage here
+        autoClose: 3000,
+      });
     } catch (error) {
-      // Handle specific error messages
+      // Handle specific error messages with a toaster
       const errorMessage = error.response?.data?.message || 'Failed to start assembly!';
-      alert(errorMessage);
+      toast.error(errorMessage, {
+        position: 'top-right',  // Correct usage here
+        autoClose: 3000,
+      });
     }
   };
 
@@ -44,6 +51,7 @@ const BikeSelection = () => {
           Bike 3
         </button>
       </div>
+      <ToastContainer />
     </div>
   );
 };

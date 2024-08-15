@@ -4,6 +4,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import MyChart from "./MyChart";
 import { getAccessToken } from "../utils";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminDashboard = () => {
   const [fromDate, setFromDate] = useState(null);
@@ -64,7 +66,7 @@ const AdminDashboard = () => {
         ],
       });
 
-      // Process data for employee production chart (if available)
+      // Process data for employee production chart
       const employees = [...new Set(bikes.map((bike) => bike.assembledBy))];
       const employeeCounts = employees.map((emp) =>
         bikes.filter((bike) => bike.assembledBy === emp).length
@@ -81,20 +83,29 @@ const AdminDashboard = () => {
           },
         ],
       });
+
     } catch (error) {
       console.error("Error fetching data:", error);
+      toast.error("Failed to fetch data!", {
+        position: 'top-right',
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleFilter = () => {
-    fetchData();
+  const handleFilter = async () => {
+    await fetchData();
+    toast.success("Data filtered successfully!", {
+      position: 'top-right',
+      autoClose: 3000,
+    });
   };
+
+  useEffect(() => {
+    fetchData(); // Initial data fetch
+  }, []);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -137,6 +148,7 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+      <ToastContainer />
     </div>
   );
 };
