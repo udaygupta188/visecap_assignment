@@ -39,4 +39,3 @@ app.use("/api", routes);
 app.listen(port, () => {
     console.log(`Node/Express Server is Up......\nPort: localhost:${port}`);
 });
-module.exports = app;
